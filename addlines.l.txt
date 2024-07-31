@@ -1,0 +1,33 @@
+%{
+#include <stdio.h>
+int line_num = 1; // Variable to keep track of line numbers
+%}
+
+%%
+\n      { // Rule to handle newline characters
+            printf("%d: %s", line_num++, yytext);
+        }
+.|\t    { // Rule to handle any character (including tabs)
+            printf("%s", yytext);
+        }
+%%
+
+int main(int argc, char *argv[]) {
+    if (argc > 1) {
+        FILE *file = fopen(argv[1], "r");
+        if (!file) {
+            perror("Cannot open file");
+            return 1;
+        }
+        yyin = file;
+        yylex();
+        fclose(file);
+    } else {
+        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+    }
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}

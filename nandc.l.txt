@@ -1,0 +1,29 @@
+%{
+#include <stdio.h>
+#include <ctype.h>
+
+void addToList(const char* token, int isNumber);
+%}
+
+%option noyywrap
+
+%%
+
+[0-9]+      { addToList(yytext, 1); }
+[A-Za-z]+   { addToList(yytext, 0); }
+.|\n        { /* Ignore other characters */ }
+
+%%
+
+void addToList(const char* token, int isNumber) {
+    if (isNumber) {
+        printf("Number: %s\n", token);
+    } else {
+        printf("Word: %s\n", token);
+    }
+}
+
+int main() {
+    yylex();
+    return 0;
+}

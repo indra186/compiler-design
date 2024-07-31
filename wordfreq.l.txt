@@ -1,0 +1,45 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+char *target_word = NULL;
+int word_count = 0;
+
+void set_target_word(char *word) {
+    target_word = word;
+}
+%}
+
+%%
+
+{target_word} { word_count++; }
+
+%%
+
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <target_word> <input_file>\n", argv[0]);
+        return 1;
+    }
+
+    // Set the target word to be counted
+    set_target_word(argv[1]);
+
+    // Open the input file
+    FILE *file = fopen(argv[2], "r");
+    if (!file) {
+        perror(argv[2]);
+        return 1;
+    }
+
+    yyin = file;
+
+    // Perform the lexical analysis
+    yylex();
+
+    // Print the result
+    printf("Frequency of '%s': %d\n", target_word, word_count);
+
+    fclose(file);
+    return 0;
+}

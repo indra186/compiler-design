@@ -1,0 +1,16 @@
+%{
+#include<stdio.h>
+%}
+%%
+[/]{1}[/]{1}[a-zA-Z0-9]* {printf("Single Line Comment", yytext);}
+[/]{1}[]{1}[a-zA-Z0-9][*]{1}[/]{1} {printf("Multiline Comment", yytext);}
+%%
+int main()
+{
+printf("\n Enter the input string:");
+yylex();
+}
+int yywrap()
+{
+return 1;
+}
